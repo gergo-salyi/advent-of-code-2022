@@ -1,9 +1,11 @@
 const INPUT: &str = include_str!("../res/input02");
 
+#[allow(unused)]
 pub fn part1() {
     println!("{}", run1(INPUT)) // 17189
 }
 
+#[allow(unused)]
 pub fn part2() {
     println!("{}", run2(INPUT)) // 13490
 }
@@ -22,7 +24,7 @@ fn score(opponent_shape: i8, my_shape: i8) -> u8 {
     outcome + my_shape as u8
 }
 
-fn run1(input: &str) -> u64 {
+pub fn run1(input: &str) -> u64 {
     input
         .lines()
         .map(|line| {

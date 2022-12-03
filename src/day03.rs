@@ -2,10 +2,12 @@ use smallvec::SmallVec;
 
 const INPUT: &[u8] = include_bytes!("../res/input03");
 
+#[allow(unused)]
 pub fn part1() {
     println!("{}", run1(INPUT)) // 8243
 }
 
+#[allow(unused)]
 pub fn part2() {
     println!("{}", run2(INPUT)) // 2631
 }
@@ -31,7 +33,7 @@ fn run1(input: &[u8]) -> u64 {
         first.sort_unstable();
         debug_assert!(!first.spilled());
         for item in second {
-            if let Ok(_) = first.binary_search(item) {
+            if first.binary_search(item).is_ok() {
                 sum += priority(*item) as u64;
                 break;
             }
@@ -45,7 +47,7 @@ fn run2(input: &[u8]) -> u64 {
     let mut lines = input.split(|&c| c == b'\n');
     loop {
         let Some(line1) = lines.next() else { break };
-        if line1.len() == 0 {
+        if line1.is_empty() {
             break;
         };
         let line2 = lines.next().unwrap();
@@ -55,11 +57,11 @@ fn run2(input: &[u8]) -> u64 {
         line1.sort_unstable();
         line2.sort_unstable();
         for item in line3 {
-            if let Ok(_) = line1.binary_search(item) {
-                if let Ok(_) = line2.binary_search(item) {
-                    sum += priority(*item) as u64;
-                    break;
-                }
+            if line1.binary_search(item).is_ok()
+                && line2.binary_search(item).is_ok()
+            {
+                sum += priority(*item) as u64;
+                break;
             }
         }
     }

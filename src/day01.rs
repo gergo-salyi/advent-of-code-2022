@@ -1,9 +1,11 @@
 const INPUT: &str = include_str!("../res/input01");
 
+#[allow(unused)]
 pub fn part1() {
     println!("{}", run1(INPUT)) // 69310
 }
 
+#[allow(unused)]
 pub fn part2() {
     println!("{}", run2(INPUT)) // 206104
 }
