@@ -1,5 +1,5 @@
-mod day02;
+mod day03;
 
 fn main() {
-    day02::part2()
+    day03::part2()
 }
