@@ -20,7 +20,7 @@ fn priority(char_code: u8) -> u8 {
     }
 }
 
-fn run1(input: &[u8]) -> u64 {
+pub fn run1(input: &[u8]) -> u64 {
     let mut sum = 0u64;
     for line in input.split(|&c| c == b'\n') {
         let half_len = line.len() / 2;
@@ -42,7 +42,7 @@ fn run1(input: &[u8]) -> u64 {
     sum
 }
 
-fn run2(input: &[u8]) -> u64 {
+pub fn run2(input: &[u8]) -> u64 {
     let mut sum = 0u64;
     let mut lines = input.split(|&c| c == b'\n');
     loop {
