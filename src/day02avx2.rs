@@ -3,12 +3,13 @@ compile_error!("needs x86_64 and AVX2");
 
 use core::arch::x86_64::{
     __m256i, _mm256_add_epi16, _mm256_add_epi32, _mm256_add_epi64,
-    _mm256_add_epi8, _mm256_blendv_epi8, _mm256_cmpeq_epi8,
-    _mm256_cvtepu16_epi32, _mm256_cvtepu32_epi64, _mm256_cvtepu8_epi16,
-    _mm256_extracti128_si256, _mm256_loadu_si256, _mm256_set1_epi8,
-    _mm256_setr_epi8, _mm256_setzero_si256, _mm256_shuffle_epi8,
-    _mm256_storeu_si256, _mm256_sub_epi8, _mm256_unpackhi_epi8,
-    _mm256_unpacklo_epi8, _mm_add_epi64, _mm_storeu_si128,
+    _mm256_add_epi8, _mm256_adds_epu16, _mm256_adds_epu8, _mm256_blendv_epi8,
+    _mm256_cmpeq_epi8, _mm256_cvtepu16_epi32, _mm256_cvtepu32_epi64,
+    _mm256_cvtepu8_epi16, _mm256_extracti128_si256, _mm256_loadu_si256,
+    _mm256_set1_epi8, _mm256_setr_epi8, _mm256_setzero_si256,
+    _mm256_shuffle_epi8, _mm256_storeu_si256, _mm256_sub_epi8,
+    _mm256_unpackhi_epi8, _mm256_unpacklo_epi8, _mm_add_epi64,
+    _mm_storeu_si128,
 };
 
 use std::{intrinsics::unlikely, mem::MaybeUninit, ptr::copy_nonoverlapping};
@@ -104,20 +105,24 @@ unsafe fn score_avx2(input_slice: &[u8]) -> u64 {
             bad_loss_value,
             good_loss_value,
         );
-        acc_u8x32 = _mm256_add_epi16(acc_u8x32, chunk_score);
+        acc_u8x32 = _mm256_adds_epu8(acc_u8x32, chunk_score);
 
-        // The u8x32 accumulator fills up every 28 cycles (255/(6+3))
+        // Cycle var i couts chunks. 1 chunk = 128 byte = 32 game
+        // Acc u8 units get max 9 points / cycle
+        // Acc u16 units get max 18 points / cycle
+
+        // The u8x32 accumulator fills up every 28 cycles (255/9)
         if unlikely(i % 28 == 27) {
             // Flush acc_u8x32 into acc_u16x16 and reset acc_u8x32 to zero
-            acc_u16x16 = _mm256_add_epi16(
+            acc_u16x16 = _mm256_adds_epu16(
                 acc_u16x16,
                 hadd_get_u16x16_from_u8x32(acc_u8x32),
             );
             acc_u8x32 = _mm256_setzero_si256();
         }
 
-        // The u16x16 accumulator would fill up every 7281 cycles (65535/(6+3))
-        // This is not reached with the current input
+        // The u16x16 accumulator would fill up every 3640 cycles (65535/18)
+        // This is not reached with the current input (2500 lines)
     }
 
     if needs_extra_chunk {
@@ -135,12 +140,12 @@ unsafe fn score_avx2(input_slice: &[u8]) -> u64 {
             bad_loss_value,
             good_loss_value,
         );
-        acc_u8x32 = _mm256_add_epi8(acc_u8x32, extra_chunk_score);
+        acc_u8x32 = _mm256_adds_epu8(acc_u8x32, extra_chunk_score);
     }
 
     // Flush the rest of acc_u8x32 into acc_u16x16
     acc_u16x16 =
-        _mm256_add_epi16(acc_u16x16, hadd_get_u16x16_from_u8x32(acc_u8x32));
+        _mm256_adds_epu16(acc_u16x16, hadd_get_u16x16_from_u8x32(acc_u8x32));
 
     // Horizontal sum acc_u16x16 to get the answer
     horizontal_sum_u16x16(acc_u16x16)
