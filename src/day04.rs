@@ -1,4 +1,4 @@
-use atoi::atoi;
+use atoi::FromRadix10;
 use nom::{
     bytes::complete::{take, take_until1},
     character::complete::{char, digit1},
@@ -20,7 +20,7 @@ pub fn part2() {
 }
 
 fn parse_decimal(decimal: &[u8]) -> u8 {
-    atoi::<u8>(decimal).unwrap()
+    u8::from_radix_10(decimal).0
 }
 
 fn range(input: &[u8]) -> IResult<&[u8], (u8, u8)> {
@@ -40,16 +40,16 @@ fn parse(input: &[u8]) -> Vec<((u8, u8), (u8, u8))> {
 }
 */
 
-fn is_pair_fully_containes(pair: ((u8, u8), (u8, u8))) -> bool {
-    let a_containes_b = (pair.0 .0 <= pair.1 .0) & (pair.0 .1 >= pair.1 .1);
-    let b_containes_a = (pair.0 .0 >= pair.1 .0) & (pair.0 .1 <= pair.1 .1);
-    a_containes_b | b_containes_a
+fn is_pair_fully_contains(pair: ((u8, u8), (u8, u8))) -> bool {
+    let a_contains_b = (pair.0 .0 <= pair.1 .0) & (pair.0 .1 >= pair.1 .1);
+    let b_contains_a = (pair.0 .0 >= pair.1 .0) & (pair.0 .1 <= pair.1 .1);
+    a_contains_b | b_contains_a
 }
 
-fn take_line_test_pair_fully_containes(input: &[u8]) -> IResult<&[u8], bool> {
+fn take_line_test_pair_fully_contains(input: &[u8]) -> IResult<&[u8], bool> {
     let (input, line) = take_until1("\n")(input)?;
     let (input, _) = take(1usize)(input)?;
-    Ok((input, is_pair_fully_containes(pair(line)?.1)))
+    Ok((input, is_pair_fully_contains(pair(line)?.1)))
 }
 
 fn is_pair_overlaps(pair: ((u8, u8), (u8, u8))) -> bool {
@@ -82,10 +82,10 @@ pub fn run1old(input: &[u8]) -> u64 {
 
 pub fn run1(input: &[u8]) -> u64 {
     fold_many1(
-        take_line_test_pair_fully_containes,
+        take_line_test_pair_fully_contains,
         || 0u64,
-        |mut acc: u64, pair_fully_containes: bool| {
-            if pair_fully_containes {
+        |mut acc: u64, pair_fully_contains: bool| {
+            if pair_fully_contains {
                 acc += 1
             };
             acc

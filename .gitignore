@@ -1,1 +1,6 @@
 /target
+dhat-heap.json
+flamegraph.svg
+perf.data*
+
+input*upscale
