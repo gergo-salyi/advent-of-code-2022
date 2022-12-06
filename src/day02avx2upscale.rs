@@ -206,7 +206,7 @@ unsafe fn score_u8x128(
     let shapes_1 = _mm256_add_epi8(shapes_1_half_1, shapes_1_half_2);
     let shapes_2 = _mm256_add_epi8(shapes_2_half_1, shapes_2_half_2);
 
-    // get [ op x 64 ] and [ my x 64 ]
+    // get [ op x 32 ] and [ my x 32 ]
     let op_shapes = _mm256_unpacklo_epi8(shapes_1, shapes_2);
     let my_shapes = _mm256_unpackhi_epi8(shapes_1, shapes_2);
 
@@ -242,7 +242,7 @@ unsafe fn score_u8x128(
     let outcome2 = _mm256_add_epi8(outcome, outcome);
     let outcome_score = _mm256_add_epi8(outcome, outcome2);
 
-    // get [ score x 64 ]
+    // get [ score x 32 ]
     _mm256_add_epi8(outcome_score, shape_score)
 }
 

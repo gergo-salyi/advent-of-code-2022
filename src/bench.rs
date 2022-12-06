@@ -60,16 +60,16 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 //     });
 // }
 
-mod day05;
-fn day05(c: &mut Criterion) {
-    const INPUT: &[u8] = include_bytes!("../res/input05");
-    c.bench_function("day05-part1", |b| {
-        b.iter(|| day05::run1(black_box(INPUT)))
+mod day06;
+fn day06(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input06");
+    c.bench_function("day06-part1", |b| {
+        b.iter(|| day06::run1(black_box(INPUT)))
     });
-    c.bench_function("day05-part2", |b| {
-        b.iter(|| day05::run2(black_box(INPUT)))
+    c.bench_function("day06-part2", |b| {
+        b.iter(|| day06::run2(black_box(INPUT)))
     });
 }
 
-criterion_group!(benches, day05);
+criterion_group!(benches, day06);
 criterion_main!(benches);

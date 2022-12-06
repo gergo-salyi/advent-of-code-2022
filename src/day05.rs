@@ -4,9 +4,11 @@ use nom::{
     character::complete::digit1,
     IResult,
 };
+
 const INPUT: &[u8] = include_bytes!("../res/input05");
+
 /*
-[N]         [C]     [Z]            
+[N]         [C]     [Z]
 [Q] [G]     [V]     [S]         [V]
 [L] [C]     [M]     [T]     [W] [L]
 [S] [H]     [L]     [C] [D] [H] [S]
@@ -14,7 +16,7 @@ const INPUT: &[u8] = include_bytes!("../res/input05");
 [Z] [T] [Z] [T] [C] [J] [G] [S] [Q]
 [P] [P] [C] [W] [W] [F] [W] [J] [C]
 [T] [L] [D] [G] [P] [P] [V] [N] [R]
- 1   2   3   4   5   6   7   8   9 
+ 1   2   3   4   5   6   7   8   9
 */
 
 #[allow(unused)]
@@ -43,21 +45,22 @@ fn step_from_line(input: &[u8]) -> IResult<&[u8], (u8, u8, u8)> {
     let (input, _) = take(4usize)(input)?;
     let (input, d) = decimal(input)?;
 
-    Ok((input, (n, s-1, d-1) ))
+    Ok((input, (n, s - 1, d - 1)))
 }
 
 fn take_init_layout(input: &[u8]) -> IResult<&[u8], Vec<Vec<u8>>> {
     let (input, init_layout) = take_until1(b"\n\n".as_slice())(input)?;
     let (procedure, _) = take(2usize)(input)?;
-    
-    let item_number = init_layout.iter()
+
+    let item_number = init_layout
+        .iter()
         // Count the capital letters
-        .filter(|&b| (65..=90).contains(b)).count();
+        .filter(|&b| (65..=90).contains(b))
+        .count();
 
     let mut stacks: Vec<Vec<u8>> = vec![Vec::with_capacity(item_number); 9];
 
-    let init_layout_lines = init_layout.split(|&b| b == b'\n')
-        .rev().skip(1);
+    let init_layout_lines = init_layout.split(|&b| b == b'\n').rev().skip(1);
 
     for line in init_layout_lines {
         for (i, stack) in stacks.iter_mut().enumerate() {
@@ -85,7 +88,9 @@ pub fn run1(input: &[u8]) -> String {
     let (procedure, mut stacks) = take_init_layout(input).unwrap();
 
     for line in procedure.split(|&byte| byte == b'\n') {
-        if line.is_empty() { break }
+        if line.is_empty() {
+            break;
+        }
         let (n, s, d) = step_from_line(line).unwrap().1;
         for _ in 0..n {
             let item = stacks[s as usize].pop().unwrap();
@@ -100,7 +105,9 @@ pub fn run2(input: &[u8]) -> String {
     let (procedure, mut stacks) = take_init_layout(input).unwrap();
 
     for line in procedure.split(|&byte| byte == b'\n') {
-        if line.is_empty() { break }
+        if line.is_empty() {
+            break;
+        }
         let (n, s, d) = step_from_line(line).unwrap().1;
         let source_new_len = stacks[s as usize].len() - n as usize;
         for i in 0..n {

@@ -4,6 +4,7 @@
 #[global_allocator]
 static ALLOC: dhat::Alloc = dhat::Alloc;
 
+// mod decimal;
 // mod day01;
 // mod day02;
 // mod day02avx2;
@@ -13,10 +14,11 @@ static ALLOC: dhat::Alloc = dhat::Alloc;
 // mod day03bitfield;
 // mod day04;
 mod day05;
+mod day06;
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    day05::part2()
+    day06::part2()
 }
