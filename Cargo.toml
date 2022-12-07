@@ -6,6 +6,7 @@ publish = false
 
 [dependencies]
 atoi = "2.0.0"
+bumpalo = { version = "3.11.1", features = ["collections"] }
 dhat = "0.3.2"
 nom = "7.1.1"
 smallvec = "1.10.0"

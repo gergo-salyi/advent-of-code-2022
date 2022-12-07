@@ -60,16 +60,34 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 //     });
 // }
 
-mod day06;
-fn day06(c: &mut Criterion) {
-    const INPUT: &[u8] = include_bytes!("../res/input06");
-    c.bench_function("day06-part1", |b| {
-        b.iter(|| day06::run1(black_box(INPUT)))
+// mod day06;
+// mod day06simd;
+// fn day06(c: &mut Criterion) {
+//     const INPUT: &[u8] = include_bytes!("../res/input06");
+//     // c.bench_function("day06-part1", |b| {
+//     //     b.iter(|| day06::run1(black_box(INPUT)))
+//     // });
+//     // c.bench_function("day06-part2", |b| {
+//     //     b.iter(|| day06::run2(black_box(INPUT)))
+//     // });
+//     c.bench_function("day06-part2-simd", |b| {
+//         b.iter(|| day06simd::run2(black_box(INPUT)))
+//     });
+//     // c.bench_function("day06-part2-sliding-window", |b| {
+//     //     b.iter(|| day06simd::sliding_window(black_box(INPUT)))
+//     // });
+// }
+
+mod day07;
+fn day07(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input07");
+    c.bench_function("day07-part1", |b| {
+        b.iter(|| day07::run1(black_box(INPUT)))
     });
-    c.bench_function("day06-part2", |b| {
-        b.iter(|| day06::run2(black_box(INPUT)))
+    c.bench_function("day07-part2", |b| {
+        b.iter(|| day07::run2(black_box(INPUT)))
     });
 }
 
-criterion_group!(benches, day06);
+criterion_group!(benches, day07);
 criterion_main!(benches);
