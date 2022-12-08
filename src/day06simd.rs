@@ -71,6 +71,7 @@ pub fn run1(input: &[u8]) -> u64 {
     0
 }
 
+/*
 // https://www.reddit.com/r/adventofcode/comments/zdw0u6/comment/iz3v100/
 // https://github.com/SvetlinZarev/advent-of-code/blob/main/2022/aoc-day-06/src/lib.rs
 const ASCII_LEN: usize = (b'z' - b'a' + 1) as usize;
@@ -120,6 +121,7 @@ pub fn sliding_window(input: &[u8]) -> usize {
         .map(|(pos, w)| pos + w.len())
         .expect("no answer")
 }
+*/
 
 // #[no_mangle]
 // #[inline(never)]
@@ -128,9 +130,9 @@ pub fn run2(input: &[u8]) -> u64 {
 }
 
 unsafe fn run2_inner(input: &[u8]) -> u64 {
-    test_slices(input.as_ptr())
+    test_slices4(input.as_ptr())
 }
-
+/*
 unsafe fn test_slices(input: *const u8) -> u64 {
     
     // ***** Constants *****
@@ -221,6 +223,91 @@ unsafe fn test_slices(input: *const u8) -> u64 {
         }
     }
 }
+*/
+
+unsafe fn test_slices4(input: *const u8) -> u64 {
+    
+    // ***** Constants *****
+
+    // Shuffle masks to rotate lower 14 i8 elements
+    let shuffle_rotate_left_lo_14_mask = _mm_setr_epi8(1, 2, 3, 4, 5, 6, 7, 8, 
+        9, 10, 11, 12, 13, 0, 14, 15);
+    
+    let shuffle_rotate_right_lo_14_mask = _mm_setr_epi8(13, 0, 1, 2, 3, 4, 5, 6, 
+        7, 8, 9, 10, 11, 12, 14, 15);
+
+    // self|    care      | dont't care      
+    // [ 00, ff, ff, ff, ... 00, 00 ]
+    #[allow(overflowing_literals)]
+    let mask_not_self_and_within_14 = _mm_setr_epi8(
+        0, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 
+        0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0, 0
+    );
+
+    // ***** Current slice vars *****
+
+    let mut offset_1 = 0isize;
+
+    // [  A,  B,  C,  A, ...  b,  a ]
+    let mut chars_a = _mm_loadu_si128(input as _);
+
+
+    // ***** Current cycle (n) vars *****
+
+    let mut cycle_1 = 0u8;
+
+    let mut char_n_in_lowest_a = chars_a;
+    
+    // [  A,  A,  A,  A, ...  A,  A ]
+    let mut char_n_a = _mm_broadcastb_epi8(char_n_in_lowest_a);
+
+
+    loop {
+
+        let is_same_as_char_n_a = _mm_cmpeq_epi8(char_n_in_lowest_a, char_n_a);
+
+        let chars_all_different_for_now_a = _mm_testz_si128(
+            is_same_as_char_n_a, 
+            mask_not_self_and_within_14
+        );
+
+        if chars_all_different_for_now_a == 0 {
+
+            // This ain't the slice slice you are looking for..
+            // load the next slice and reset the state
+            // We advande by cycle_1 + 1 elements
+            offset_1 += (cycle_1 + 1) as isize;
+
+            // TODO: check for buffer overread
+            // if offset_1 >= max_offest {
+            //     return 0
+            // }
+            chars_a = _mm_loadu_si128(input.offset(offset_1) as _);
+
+            cycle_1 = 0u8;
+            char_n_in_lowest_a = chars_a;
+            char_n_a = _mm_broadcastb_epi8(char_n_in_lowest_a);
+
+        } else {
+            // Cycle goes 0..=13 but the last element was already
+            // tested if a duplicates of any other
+            if cycle_1 == (13 - 1) {
+                // this is the one!
+                return (offset_1 + 14) as u64;
+            }
+            // We are not done eith this slice yet
+            // prepare testing the next character
+            cycle_1 += 1;
+            char_n_in_lowest_a = _mm_shuffle_epi8(
+                char_n_in_lowest_a, 
+                shuffle_rotate_left_lo_14_mask
+            );
+            char_n_a = _mm_broadcastb_epi8(char_n_in_lowest_a);
+        }
+    }
+}
+
+/*
 
 // This is actually SLOWER...
 // Idea was to insert one new element on slice reload instead of _mm_loadu
@@ -431,7 +518,7 @@ unsafe fn test_slices2(input: *const u8) -> u64 {
         }
     }
 }
-
+*/
 /*
 unsafe fn test_slices2(input: *const u8) -> u64 {
     
@@ -588,9 +675,10 @@ mod tests {
     fn test2() {
         assert_eq!(run2(EXAMPLE), 19)
     }
-    
+    /*
     #[test]
     fn test_sliding_window() {
         assert_eq!(sliding_window(EXAMPLE), 19)
     }
+    */
 }

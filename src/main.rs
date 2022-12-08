@@ -16,11 +16,13 @@ static ALLOC: dhat::Alloc = dhat::Alloc;
 // mod day05;
 // mod day06;
 // mod day06simd;
-mod day07;
+// mod day07;
+mod day08;
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    day07::part2()
+    day08::part1();
+    day08::part2();
 }

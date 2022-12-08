@@ -1,7 +1,7 @@
 use atoi::FromRadix10;
 use bumpalo::{collections::Vec, Bump};
 
-const INPUT: &[u8] = include_bytes!("../res/input07");
+const INPUT: &[u8] = include_bytes!("../res/input07deep");
 
 #[allow(unused)]
 pub fn part1() {
@@ -147,7 +147,7 @@ pub fn run1(input: &[u8]) -> u64 {
             let FsEntry::Dir((_, cwd)) = cwd else { panic!() };
             cwd.push(FsEntry::Dir((
                 dir_name,
-                Vec::with_capacity_in(32, &bump),
+                Vec::with_capacity_in(16, &bump)
             )));
         }
         total_lines += 1;
@@ -219,7 +219,7 @@ pub fn run2(input: &[u8]) -> u64 {
             let FsEntry::Dir((_, cwd)) = cwd else { panic!() };
             cwd.push(FsEntry::Dir((
                 dir_name,
-                Vec::with_capacity_in(32, &bump),
+                Vec::with_capacity_in(16, &bump)
             )));
         }
         total_lines += 1;
