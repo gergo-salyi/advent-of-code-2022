@@ -6,7 +6,8 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
         Part 1  Part 2
 
-Day 8   60 us   311 us
+Day 8    29 us  311 us
+Day 9   208 us  290 us
 
 
 */
@@ -105,18 +106,35 @@ fn day07(c: &mut Criterion) {
         b.iter(|| day07::run2(black_box(INPUT_DEEP)))
     });
 }
-*/
 
 mod day08;
+mod day08simd;
 fn day08(c: &mut Criterion) {
     const INPUT: &[u8] = include_bytes!("../res/input08");
-    c.bench_function("day08-part1", |b| {
-        b.iter(|| day08::run1(black_box(INPUT)))
-    });
+    // c.bench_function("day08-part1", |b| {
+    //     b.iter(|| day08::run1(black_box(INPUT)))
+    // });
     c.bench_function("day08-part2", |b| {
         b.iter(|| day08::run2(black_box(INPUT)))
     });
+    // c.bench_function("day08-part1-simd", |b| {
+    //     b.iter(|| day08simd::run1(black_box(INPUT)))
+    // });
+    c.bench_function("day08-part2-simd", |b| {
+        b.iter(|| day08simd::run2(black_box(INPUT)))
+    });
+}
+*/
+mod day09;
+fn day09(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input09");
+    c.bench_function("day09-part1", |b| {
+        b.iter(|| day09::run1(black_box(INPUT)))
+    });
+    c.bench_function("day09-part2", |b| {
+        b.iter(|| day09::run2(black_box(INPUT)))
+    });
 }
 
-criterion_group!(benches, day08);
+criterion_group!(benches, day09);
 criterion_main!(benches);

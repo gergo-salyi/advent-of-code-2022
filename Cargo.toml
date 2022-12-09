@@ -5,6 +5,7 @@ edition = "2021"
 publish = false
 
 [dependencies]
+ahash = "0.8.2"
 atoi = "2.0.0"
 bumpalo = { version = "3.11.1", features = ["collections"] }
 dhat = "0.3.2"

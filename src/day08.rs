@@ -30,6 +30,9 @@ pub fn run1(input: &[u8]) -> u64 {
             let height = forest[i][j];
             if height > heighest_seen {
                 visiblity[i][j] = 1;
+                if height == 9 {
+                    break;
+                }
             }
             heighest_seen = heighest_seen.max(height);
         }
@@ -41,6 +44,9 @@ pub fn run1(input: &[u8]) -> u64 {
             let height = forest[i][j];
             if height > heighest_seen {
                 visiblity[i][j] = 1;
+                if height == 9 {
+                    break;
+                }
             }
             heighest_seen = heighest_seen.max(height);
         }
@@ -52,6 +58,9 @@ pub fn run1(input: &[u8]) -> u64 {
             let height = forest[j][i];
             if height > heighest_seen {
                 visiblity[j][i] = 1;
+                if height == 9 {
+                    break;
+                }
             }
             heighest_seen = heighest_seen.max(height);
         }
@@ -63,6 +72,9 @@ pub fn run1(input: &[u8]) -> u64 {
             let height = forest[j][i];
             if height > heighest_seen {
                 visiblity[j][i] = 1;
+                if height == 9 {
+                    break;
+                }
             }
             heighest_seen = heighest_seen.max(height);
         }
