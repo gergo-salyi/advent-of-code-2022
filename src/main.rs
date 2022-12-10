@@ -25,13 +25,17 @@ mod day08;
 mod day07tree;
 
 mod day08simd;
-*/
+
 mod day09;
+mod day09nohash;
+*/
+
+mod day10;
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    day09::part1();
-    day09::part2();
+    day10::part1();
+    day10::part2();
 }
