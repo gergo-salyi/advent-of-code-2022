@@ -4,15 +4,35 @@ use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
 /*
 
-        Part 1  Part 2
+                Part 1  Part 2
 
-Day 8    29 us  311 us
-Day 9   208 us  290 us
+Day  8           29 us  311 us
+
+Day  9          193 us  229 us
+Day  9 nohash    72 us  153 us
 
 
 */
 
 /*
+mod day01;
+mod day01opt;
+fn day01(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input01");
+    const INPUT_STR: &str = include_str!("../res/input01");
+    c.bench_function("day01-part1", |b| {
+        b.iter(|| day01::run1(black_box(INPUT_STR)))
+    });
+    c.bench_function("day01-part1-opt", |b| {
+        b.iter(|| day01opt::run1(black_box(INPUT)))
+    });
+    c.bench_function("day01-part2", |b| {
+        b.iter(|| day01::run2(black_box(INPUT_STR)))
+    });
+    c.bench_function("day01-part2-opt", |b| {
+        b.iter(|| day01opt::run2(black_box(INPUT)))
+    });
+}
 mod day02;
 mod day02avx2;
 mod day02avx2upscale;
@@ -124,17 +144,36 @@ fn day08(c: &mut Criterion) {
         b.iter(|| day08simd::run2(black_box(INPUT)))
     });
 }
-*/
+
 mod day09;
+mod day09nohash;
 fn day09(c: &mut Criterion) {
     const INPUT: &[u8] = include_bytes!("../res/input09");
-    c.bench_function("day09-part1", |b| {
-        b.iter(|| day09::run1(black_box(INPUT)))
+    // c.bench_function("day09-part1", |b| {
+    //     b.iter(|| day09::run1(black_box(INPUT)))
+    // });
+    c.bench_function("day09-part1-nohash", |b| {
+        b.iter(|| day09nohash::run1(black_box(INPUT)))
     });
-    c.bench_function("day09-part2", |b| {
-        b.iter(|| day09::run2(black_box(INPUT)))
+    // c.bench_function("day09-part2", |b| {
+    //     b.iter(|| day09::run2(black_box(INPUT)))
+    // });
+    c.bench_function("day09-part2-nohash", |b| {
+        b.iter(|| day09nohash::run2(black_box(INPUT)))
+    });
+}
+*/
+
+mod day11;
+fn day11(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input11");
+    c.bench_function("day11-part1", |b| {
+        b.iter(|| day11::run1(black_box(INPUT)))
+    });
+    c.bench_function("day11-part2", |b| {
+        b.iter(|| day11::run2(black_box(INPUT)))
     });
 }
 
-criterion_group!(benches, day09);
+criterion_group!(benches, day11);
 criterion_main!(benches);
