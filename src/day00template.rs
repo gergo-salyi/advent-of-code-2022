@@ -13,6 +13,9 @@ pub fn part2() {
 pub fn run1(input: &[u8]) -> u64 {
     let mut answer = 0u64;
     for line in input.split(|&b| b == b'\n') {
+        if line.is_empty() {
+            break;
+        };
     }
     answer
 }
@@ -20,6 +23,9 @@ pub fn run1(input: &[u8]) -> u64 {
 pub fn run2(input: &[u8]) -> u64 {
     let mut answer = 0u64;
     for line in input.split(|&b| b == b'\n') {
+        if line.is_empty() {
+            break;
+        };
     }
     answer
 }
