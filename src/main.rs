@@ -1,4 +1,4 @@
-#![feature(core_intrinsics, stdsimd)]
+#![feature(core_intrinsics, stdsimd, byte_slice_trim_ascii)]
 
 #[cfg(feature = "dhat-heap")]
 #[global_allocator]
@@ -34,14 +34,17 @@ mod day11;
 mod day12;
 mod day13;
 mod day14;
+mod day15;
+mod day17;
+mod day18;
 */
 
-mod day15;
+mod day16;
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    day15::part1();
-    day15::part2();
+    day16::part1();
+    day16::part2();
 }
