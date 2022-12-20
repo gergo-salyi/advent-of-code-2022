@@ -38,14 +38,15 @@ mod day15;
 mod day16;
 mod day17;
 mod day18;
+mod day19;
 */
 
-mod day19;
+mod day20;
 
 fn main() {
     #[cfg(feature = "dhat-heap")]
     let _profiler = dhat::Profiler::new_heap();
 
-    day19::part1();
-    day19::part2();
+    day20::part1();
+    day20::part2();
 }
