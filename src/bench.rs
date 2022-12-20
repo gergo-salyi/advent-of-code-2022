@@ -1,4 +1,4 @@
-#![feature(core_intrinsics, stdsimd)]
+#![feature(core_intrinsics, stdsimd, byte_slice_trim_ascii)]
 
 use criterion::{black_box, criterion_group, criterion_main, Criterion};
 
@@ -162,7 +162,6 @@ fn day09(c: &mut Criterion) {
         b.iter(|| day09nohash::run2(black_box(INPUT)))
     });
 }
-*/
 
 mod day11;
 fn day11(c: &mut Criterion) {
@@ -174,6 +173,18 @@ fn day11(c: &mut Criterion) {
         b.iter(|| day11::run2(black_box(INPUT)))
     });
 }
+*/
 
-criterion_group!(benches, day11);
+mod day20;
+fn day20(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input20");
+    c.bench_function("day20-part1", |b| {
+        b.iter(|| day20::run1(black_box(INPUT)))
+    });
+    c.bench_function("day20-part2", |b| {
+        b.iter(|| day20::run2(black_box(INPUT)))
+    });
+}
+
+criterion_group!(benches, day20);
 criterion_main!(benches);
