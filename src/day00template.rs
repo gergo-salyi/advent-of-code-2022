@@ -2,30 +2,28 @@ const INPUT: &[u8] = include_bytes!("../res/input00");
 
 #[allow(unused)]
 pub fn part1() {
-    println!("{}", run1(INPUT)) // 
+    let answer = run1(INPUT);
+    // assert_eq!(answer, todo!());
+    println!("{answer}");
 }
 
 #[allow(unused)]
 pub fn part2() {
-    println!("{}", run2(INPUT)) // 
+    let answer = run2(INPUT);
+    // assert_eq!(answer, todo!());
+    println!("{answer}");
 }
 
 pub fn run1(input: &[u8]) -> u64 {
     let mut answer = 0u64;
-    for line in input.split(|&b| b == b'\n') {
-        if line.is_empty() {
-            break;
-        };
+    for line in input.trim_ascii_end().split(|&b| b == b'\n') {
     }
     answer
 }
 
 pub fn run2(input: &[u8]) -> u64 {
     let mut answer = 0u64;
-    for line in input.split(|&b| b == b'\n') {
-        if line.is_empty() {
-            break;
-        };
+    for line in input.trim_ascii_end().split(|&b| b == b'\n') {
     }
     answer
 }
@@ -42,6 +40,7 @@ mod tests {
     }
 
     #[test]
+    #[ignore]
     fn test2() {
         assert_eq!(run2(EXAMPLE), todo!())
     }

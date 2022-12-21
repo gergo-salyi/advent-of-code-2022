@@ -11,6 +11,7 @@ Day  8           29 us  311 us
 Day  9          193 us  229 us
 Day  9 nohash    72 us  153 us
 
+Day 21           66 us   72 us
 
 */
 
@@ -173,7 +174,6 @@ fn day11(c: &mut Criterion) {
         b.iter(|| day11::run2(black_box(INPUT)))
     });
 }
-*/
 
 mod day20;
 fn day20(c: &mut Criterion) {
@@ -185,6 +185,18 @@ fn day20(c: &mut Criterion) {
         b.iter(|| day20::run2(black_box(INPUT)))
     });
 }
+*/
 
-criterion_group!(benches, day20);
+mod day21;
+fn day21(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input21");
+    c.bench_function("day21-part1", |b| {
+        b.iter(|| day21::run1(black_box(INPUT)))
+    });
+    c.bench_function("day21-part2", |b| {
+        b.iter(|| day21::run2(black_box(INPUT)))
+    });
+}
+
+criterion_group!(benches, day21);
 criterion_main!(benches);
