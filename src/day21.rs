@@ -22,14 +22,16 @@ pub fn part2() {
     println!("{answer}");
 }
 
-#[derive(Clone, Debug)]
+//safe_parse: #[derive(Clone, Debug)]
+#[derive(Debug)]
 struct Op {
     lhs_idx: u16,
     op: u8,
     rhs_idx: u16,
 }
 
-#[derive(Clone, Debug)]
+//safe_parse: #[derive(Clone, Debug)]
+#[derive(Debug)]
 enum Monkey {
     Num(i64),
     Op(Op),
@@ -114,21 +116,33 @@ pub fn run1(input: &[u8]) -> i64 {
     let mut name_idx_map: HashMap<[u8; 4], u16> =
         HashMap::with_capacity(min_len * 2);
 
-    let mut monkeys = vec![Monkey::Num(0); min_len];
+    //safe: let mut monkeys = vec![Monkey::Num(0); min_len];
+    let mut monkeys: Vec<Monkey> = Vec::with_capacity(min_len);
+
     let mut root_idx = 0u16;
 
     for line in input.trim_ascii_end().split(|&b| b == b'\n') {
         let monkey = take_monkey(line, &mut name_idx_map, &mut root_idx)
             .unwrap()
             .1;
-        monkeys[monkey.0 as usize] = monkey.1;
+
+        //safe: monkeys[monkey.0 as usize] = monkey.1;
+        unsafe {
+            monkeys.as_mut_ptr().offset(monkey.0 as isize).write(monkey.1);
+        }
+
     }
-    monkeys.truncate(name_idx_map.len());
+
+    //safe: monkeys.truncate(name_idx_map.len());
+    unsafe {
+        monkeys.set_len(name_idx_map.len());
+    }
 
     number(root_idx, &monkeys)
 }
 
-#[derive(Clone, Debug)]
+//safe_parse: #[derive(Clone, Debug)]
+#[derive(Debug)]
 enum Monkey2 {
     Num(Option<i64>),
     Op(Op),
@@ -220,16 +234,27 @@ pub fn run2(input: &[u8]) -> i64 {
     let mut name_idx_map: HashMap<[u8; 4], u16> =
         HashMap::with_capacity(min_len * 2);
 
-    let mut monkeys = vec![Monkey2::Num(None); min_len];
+    //safe: let mut monkeys = vec![Monkey2::Num(None); min_len];
+    let mut monkeys: Vec<Monkey2> = Vec::with_capacity(min_len);
+
     let mut root_idx = 0u16;
 
     for line in input.trim_ascii_end().split(|&b| b == b'\n') {
         let monkey = take_monkey2(line, &mut name_idx_map, &mut root_idx)
             .unwrap()
             .1;
-        monkeys[monkey.0 as usize] = monkey.1;
+        
+        //safe: monkeys[monkey.0 as usize] = monkey.1;
+        unsafe {
+            monkeys.as_mut_ptr().offset(monkey.0 as isize).write(monkey.1);
+        }
+
     }
-    monkeys.truncate(name_idx_map.len());
+
+    //safe: monkeys.truncate(name_idx_map.len());
+    unsafe {
+        monkeys.set_len(name_idx_map.len());
+    }
 
     let mut opstack: Vec<(u8, i64)> = Vec::with_capacity(monkeys.len());
 

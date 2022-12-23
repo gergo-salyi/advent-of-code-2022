@@ -13,15 +13,20 @@ const INPUT: &[u8] = include_bytes!("../res/input16");
 
 #[allow(unused)]
 pub fn part1() {
-    println!("{}", run1(INPUT)) // 1873
+    let answer = run1(INPUT);
+    assert_eq!(answer, 1873);
+    println!("{answer}");
 }
 
 #[allow(unused)]
 pub fn part2() {
-    println!("{}", run2(INPUT)) //
+    let answer = run2(INPUT);
+    assert_eq!(answer, 2425);
+    println!("{answer}");
 }
 
-#[derive(Debug, Default, Clone)]
+//safe_parse: #[derive(Debug, Default, Clone)]
+#[derive(Debug)]
 struct Valve {
     flow_rate: u8,
     tunnels: Vec<u8>,
@@ -80,9 +85,12 @@ fn parse(input: &[u8]) -> (Vec<Valve>, Vec<u8>, u8) {
     let mut input = input;
 
     let valves_count_max = input.len() / 51;
-    let mut name_id_map: HashMap<[u8; 2], u8> = HashMap::with_capacity(valves_count_max);
-    // let mut valves = Vec::with_capacity(valves_count_max);
-    let mut valves = vec![Valve::default(); valves_count_max];
+    let mut name_id_map: HashMap<[u8; 2], u8> = 
+        HashMap::with_capacity(valves_count_max);
+
+    let mut valves: Vec<Valve> = Vec::with_capacity(valves_count_max);
+    //safe: let mut valves = vec![Valve::default(); valves_count_max];
+
     let mut non_zero_flow_ids = Vec::with_capacity(valves_count_max);
 
     while let Ok((i, (id, valve))) = line(input, &mut name_id_map) {
@@ -90,19 +98,19 @@ fn parse(input: &[u8]) -> (Vec<Valve>, Vec<u8>, u8) {
         if valve.flow_rate > 0 {
             non_zero_flow_ids.push(id);
         }
-        // unsafe {
-        //     // assert!(valves_count_max > id as usize);
-        //     *valves.get_unchecked_mut(id as usize) = valve;
-        // }
-        valves[id as usize] = valve;
+        unsafe {
+            // assert!(valves_count_max > id as usize);
+            valves.as_mut_ptr().offset(id as isize).write(valve);
+        }
+        //safe: valves[id as usize] = valve;
     }
 
     // This parser minimizes the copying but
     // is unsafe againt incorrect input
-    // unsafe {
-    //     valves.set_len(name_id_map.len());
-    // }
-    valves.truncate(name_id_map.len());
+    unsafe {
+        valves.set_len(name_id_map.len());
+    }
+    //safe: valves.truncate(name_id_map.len());
 
     // println!("{:?}", name_id_map.iter().map(|(k,v)| (std::str::from_utf8(k).unwrap(),v)).collect::<Vec<_>>() );
 
