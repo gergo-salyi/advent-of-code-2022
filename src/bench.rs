@@ -13,6 +13,7 @@ Day  9 nohash    72 us  153 us
 
 Day 21           66 us   72 us
 Day 23          325 us   40 ms
+Day 24          6.7 ms   22 ms
 
 */
 
@@ -199,16 +200,16 @@ fn day21(c: &mut Criterion) {
 }
 */
 
-mod day23;
-fn day23(c: &mut Criterion) {
-    const INPUT: &[u8] = include_bytes!("../res/input23");
-    c.bench_function("day23-part1", |b| {
-        b.iter(|| day23::run1(black_box(INPUT)))
+mod day24;
+fn day24(c: &mut Criterion) {
+    const INPUT: &[u8] = include_bytes!("../res/input24");
+    c.bench_function("day24-part1", |b| {
+        b.iter(|| day24::run1(black_box(INPUT)))
     });
-    c.bench_function("day23-part2", |b| {
-        b.iter(|| day23::run2(black_box(INPUT)))
+    c.bench_function("day24-part2", |b| {
+        b.iter(|| day24::run2(black_box(INPUT)))
     });
 }
 
-criterion_group!(benches, day23);
+criterion_group!(benches, day24);
 criterion_main!(benches);
